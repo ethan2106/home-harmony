@@ -4,10 +4,8 @@ require_once 'includes/bootstrap.php';
 // Suppression d'une tâche
 if (isset($_GET['delete'])) {
     $idToDelete = $_GET['delete'];
-    $tasks = array_filter($tasks, function($t) use ($idToDelete) {
-        return $t['id'] != $idToDelete;
-    });
-    saveData('tasks.json', $tasks);
+    $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = ?");
+    $stmt->execute([$idToDelete]);
     header('Location: admin.php');
     exit;
 }
@@ -15,10 +13,8 @@ if (isset($_GET['delete'])) {
 // Suppression d'une pièce
 if (isset($_GET['delete_room'])) {
     $idToDelete = $_GET['delete_room'];
-    $rooms = array_filter($rooms, function($r) use ($idToDelete) {
-        return $r['id'] != $idToDelete;
-    });
-    saveData('rooms.json', $rooms);
+    $stmt = $pdo->prepare("DELETE FROM rooms WHERE id = ?");
+    $stmt->execute([$idToDelete]);
     header('Location: admin.php');
     exit;
 }
@@ -26,10 +22,8 @@ if (isset($_GET['delete_room'])) {
 // Suppression d'un profil
 if (isset($_GET['delete_profile'])) {
     $idToDelete = $_GET['delete_profile'];
-    $profiles = array_filter($profiles, function($p) use ($idToDelete) {
-        return $p['id'] != $idToDelete;
-    });
-    saveData('profiles.json', $profiles);
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->execute([$idToDelete]);
     header('Location: admin.php');
     exit;
 }

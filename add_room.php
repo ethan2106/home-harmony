@@ -1,18 +1,14 @@
 <?php
-require_once 'includes/functions.php';
+require_once 'includes/bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $rooms = loadData('rooms.json');
-    
-    $newRoom = [
-        'id' => time(),
-        'nom' => $_POST['nom'],
-        'emoji' => $_POST['emoji'],
-        'couleur' => $_POST['couleur']
-    ];
-    
-    $rooms[] = $newRoom;
-    saveData('rooms.json', $rooms);
+    $stmt = $pdo->prepare("INSERT INTO rooms (nom, emoji, couleur, zone) VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['nom'],
+        $_POST['emoji'],
+        $_POST['couleur'],
+        $_POST['zone'] ?? 'maison'
+    ]);
     
     header('Location: admin.php');
     exit;

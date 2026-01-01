@@ -1,21 +1,14 @@
 <?php
-require_once 'includes/functions.php';
+require_once 'includes/bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tasks = loadData('tasks.json');
-    
-    $newTask = [
-        'id' => time(),
-        'titre' => $_POST['titre'],
-        'room_id' => $_POST['room_id'],
-        'frequence' => $_POST['frequence'],
-        'dernier_fait' => null,
-        'fait_par' => null,
-        'date_creation' => date('Y-m-d')
-    ];
-    
-    $tasks[] = $newTask;
-    saveData('tasks.json', $tasks);
+    $stmt = $pdo->prepare("INSERT INTO tasks (room_id, titre, frequence, date_creation) VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['room_id'],
+        $_POST['titre'],
+        $_POST['frequence'],
+        date('Y-m-d')
+    ]);
     
     header('Location: admin.php');
     exit;

@@ -34,17 +34,15 @@ include 'includes/navbar.php';
                         </div>
                     <?php else: ?>
                         <?php foreach ($todoTasks as $task): 
-                            // Récupération de la pièce associée
-                            $room = array_values(array_filter($rooms, fn($r) => $r['id'] == ($task['room_id'] ?? 0)))[0] ?? null;
                             // Catégorisation simplifiée pour le filtre JS
-                            $cat = ($task['room_id'] === 'jardin' || (isset($room['nom']) && strtolower($room['nom']) == 'jardin')) ? 'jardin' : 
-                                   (($task['room_id'] === 'voiture' || (isset($room['nom']) && strtolower($room['nom']) == 'voiture')) ? 'voiture' : 'maison');
+                            $cat = ($task['zone'] === 'jardin') ? 'jardin' : 
+                                   (($task['zone'] === 'voiture') ? 'voiture' : 'maison');
                         ?>
                             <div class="glass-card p-8 rounded-[3rem] flex flex-col justify-between gap-8 group bg-white/80 hover:bg-white border border-white shadow-sm transition-all" data-category="<?php echo $cat; ?>">
                                 <div class="flex justify-between items-center">
                                     <div class="flex gap-5">
                                         <div class="w-16 h-16 rounded-[1.5rem] bg-slate-50 shadow-inner flex items-center justify-center text-3xl group-hover:scale-110 transition-transform border border-slate-100">
-                                            <?php echo $room['emoji'] ?? '📋'; ?>
+                                            <?php echo $task['room_emoji'] ?? '📋'; ?>
                                         </div>
                                         <div>
                                             <div class="flex items-center gap-3 mb-1">
@@ -52,7 +50,7 @@ include 'includes/navbar.php';
                                                     <?php echo $task['frequence']; ?>
                                                 </span>
                                                 <span class="text-[11px] font-black text-indigo-600 uppercase tracking-widest">
-                                                    <?php echo $room['nom'] ?? 'Général'; ?>
+                                                    <?php echo $task['room_nom'] ?? 'Général'; ?>
                                                 </span>
                                             </div>
                                             <h3 class="text-xl font-extrabold text-slate-800 group-hover:text-indigo-600 transition-colors">

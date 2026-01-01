@@ -1,14 +1,19 @@
 <?php
-require_once 'includes/functions.php';
+require_once 'includes/bootstrap.php';
 
 // reset_app.php
-saveData('tasks.json', []);
-saveData('rooms.json', []);
-saveData('profiles.json', []);
-saveData('history.json', []);
+$pdo->exec("DELETE FROM tasks");
+$pdo->exec("DELETE FROM rooms");
+$pdo->exec("DELETE FROM users");
+$pdo->exec("DELETE FROM history");
+$pdo->exec("DELETE FROM trophies");
 
-if (file_exists('last_reset.txt')) {
-    unlink('last_reset.txt');
+// Reset auto-increment
+$pdo->exec("DELETE FROM sqlite_sequence WHERE name IN ('tasks', 'rooms', 'users', 'history', 'trophies')");
+
+$configPath = __DIR__ . '/data/last_reset.txt';
+if (file_exists($configPath)) {
+    unlink($configPath);
 }
 
 header('Location: admin.php?reset_success=1');

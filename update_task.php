@@ -3,7 +3,7 @@
  * Engine de mise à jour des tâches
  * Gère la validation (avec profil) et l'annulation (sans profil).
  */
-require_once 'includes/functions.php';
+require_once 'includes/bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $taskId = $_POST['id'] ?? null;
@@ -15,50 +15,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    $tasks = loadData('tasks.json');
     $today = date('Y-m-d');
-    $updated = false;
     
-    foreach ($tasks as &$task) {
-        if ($task['id'] == $taskId) {
-            $history = loadData('history.json') ?? [];
+    // On récupère la tâche actuelle
+    $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = ?");
+    $stmt->execute([$taskId]);
+    $task = $stmt->fetch();
 
-            // CAS 1 : ANNULATION (Pas de profil reçu ou déjà fait aujourd'hui)
-            if (!$profil || ($task['dernier_fait'] ?? '') === $today) {
-                $task['dernier_fait'] = null;
-                $task['fait_par'] = null;
-                
-                // Nettoyage de l'historique pour éviter les doublons ou scores erronés
-                $history = array_filter($history, function($entry) use ($taskId, $today) {
-                    return !($entry['task_id'] == $taskId && $entry['date'] === $today);
-                });
-                $history = array_values($history); // Réindexer
-            } 
-            // CAS 2 : VALIDATION
-            else {
-                $task['dernier_fait'] = $today;
-                $task['fait_par'] = $profil;
-                
-                $history[] = [
-                    'task_id' => $taskId,
-                    'profil' => $profil,
-                    'date' => $today
-                ];
-            }
-            
-            saveData('history.json', $history);
-            $updated = true;
-            break;
+    if (!$task) {
+        header('Content-Type: application/json', true, 404);
+        echo json_encode(['success' => false, 'error' => 'Tâche non trouvée']);
+        exit;
+    }
+
+    // CAS 1 : ANNULATION (Pas de profil reçu ou déjà fait aujourd'hui)
+    if (!$profil || ($task['dernier_fait'] ?? '') === $today) {
+        $stmt = $pdo->prepare("UPDATE tasks SET dernier_fait = NULL, fait_par = NULL WHERE id = ?");
+        $stmt->execute([$taskId]);
+        
+        $stmt = $pdo->prepare("DELETE FROM history WHERE task_id = ? AND date_action = ?");
+        $stmt->execute([$taskId, $today]);
+    } 
+    // CAS 2 : VALIDATION
+    else {
+        $stmt = $pdo->prepare("UPDATE tasks SET dernier_fait = ?, fait_par = ? WHERE id = ?");
+        $stmt->execute([$today, $profil, $taskId]);
+        
+        // On récupère l'user_id
+        $stmtUser = $pdo->prepare("SELECT id FROM users WHERE nom = ?");
+        $stmtUser->execute([$profil]);
+        $user = $stmtUser->fetch();
+
+        $stmt = $pdo->prepare("INSERT INTO history (task_id, user_id, date_action, profil) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$taskId, $user['id'] ?? null, $today, $profil]);
+
+        // Optionnel : Ajouter des points à l'utilisateur
+        if ($user) {
+            $pdo->prepare("UPDATE users SET points = points + 10 WHERE id = ?")->execute([$user['id']]);
         }
     }
 
-    if ($updated) {
-        saveData('tasks.json', $tasks);
-        header('Content-Type: application/json');
-        echo json_encode(['success' => true]);
-    } else {
-        header('Content-Type: application/json', true, 404);
-        echo json_encode(['success' => false, 'error' => 'Tâche non trouvée']);
-    }
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true]);
     exit;
 }

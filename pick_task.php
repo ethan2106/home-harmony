@@ -1,20 +1,12 @@
 <?php
-require_once 'includes/functions.php';
+require_once 'includes/bootstrap.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $taskId = $_POST['id'];
     $today = date('Y-m-d');
     
-    $tasks = loadData('tasks.json');
-    
-    foreach ($tasks as &$task) {
-        if ($task['id'] == $taskId) {
-            $task['date_prevue'] = $today;
-            break;
-        }
-    }
-    
-    saveData('tasks.json', $tasks);
+    $stmt = $pdo->prepare("UPDATE tasks SET date_prevue = ? WHERE id = ?");
+    $stmt->execute([$today, $taskId]);
     
     header('Content-Type: application/json');
     echo json_encode(['success' => true]);
