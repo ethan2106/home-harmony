@@ -53,6 +53,11 @@ if (is_array($history)) {
         }
     }
 }
+
+// --- 5. TRADUCTION DATE ---
+$jours = ['Monday' => 'Lundi', 'Tuesday' => 'Mardi', 'Wednesday' => 'Mercredi', 'Thursday' => 'Jeudi', 'Friday' => 'Vendredi', 'Saturday' => 'Samedi', 'Sunday' => 'Dimanche'];
+$mois = ['January' => 'Janvier', 'February' => 'Février', 'March' => 'Mars', 'April' => 'Avril', 'May' => 'Mai', 'June' => 'Juin', 'July' => 'Juillet', 'August' => 'Août', 'September' => 'Septembre', 'October' => 'Octobre', 'November' => 'Novembre', 'December' => 'Décembre'];
+$date_fr = $jours[date('l')] . ' ' . date('d') . ' ' . $mois[date('F')];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -177,7 +182,7 @@ if (is_array($history)) {
                 </div>
                 <div>
                     <h1 class="text-4xl font-extrabold text-slate-900 tracking-tighter">Harmony</h1>
-                    <p class="text-indigo-600 font-bold text-sm tracking-widest uppercase"><?php echo date("l d F"); ?></p>
+                    <p class="text-indigo-600 font-bold text-sm tracking-widest uppercase"><?php echo $date_fr; ?></p>
                 </div>
             </div>
 
@@ -190,7 +195,7 @@ if (is_array($history)) {
                         id="btn-<?php echo $profile['nom']; ?>"
                         class="profile-btn h-12 px-6 rounded-2xl text-white font-bold text-sm shadow-md transition-all bg-<?php echo $profile['couleur']; ?>"
                     >
-                        <?php echo $profile['nom']; ?>
+                        <?php echo (isset($profile['emoji']) && $profile['emoji']) ? $profile['emoji'] . ' ' : ''; ?><?php echo $profile['nom']; ?>
                     </button>
                 <?php endforeach; ?>
                 </div>
@@ -209,7 +214,7 @@ if (is_array($history)) {
                             <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-white/60 transition-colors border border-transparent hover:border-slate-200">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-xl bg-<?php echo $profile['couleur']; ?> flex items-center justify-center text-sm text-white font-bold shadow-lg">
-                                        <?php echo substr($profile['nom'], 0, 1); ?>
+                                        <?php echo (isset($profile['emoji']) && $profile['emoji']) ? $profile['emoji'] : substr($profile['nom'], 0, 1); ?>
                                     </div>
                                     <span class="font-bold text-slate-700"><?php echo $profile['nom']; ?></span>
                                 </div>
@@ -307,7 +312,7 @@ if (is_array($history)) {
                                     <div class="text-xs font-black text-slate-400 flex items-center gap-2">
                                         <span class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span> DISPONIBLE
                                     </div>
-                                    <div class="text-[10px] font-black text-slate-300 tracking-[0.2em] uppercase">Ready to done</div>
+                                    <div class="text-[10px] font-black text-slate-300 tracking-[0.2em] uppercase">Prêt à être fait</div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -330,7 +335,7 @@ if (is_array($history)) {
                         ?>
                             <div class="p-5 bg-white/60 border-2 border-white rounded-[2rem] flex items-center gap-5 opacity-90 backdrop-blur-md shadow-sm">
                                 <div class="w-12 h-12 rounded-2xl bg-<?php echo $profile['couleur'] ?? 'slate-400'; ?> flex items-center justify-center text-white text-sm font-black shadow-lg shrink-0">
-                                    <?php echo substr($task['fait_par'], 0, 1); ?>
+                                    <?php echo (isset($profile['emoji']) && $profile['emoji']) ? $profile['emoji'] : substr($task['fait_par'], 0, 1); ?>
                                 </div>
                                 <div class="truncate">
                                     <h4 class="text-base font-bold text-slate-400 line-through truncate"><?php echo $task['titre']; ?></h4>

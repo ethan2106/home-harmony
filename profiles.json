@@ -1,5 +1,20 @@
 [
-    {"id": 1, "nom": "Lucie", "couleur": "emerald-500"},
-    {"id": 2, "nom": "Jim", "couleur": "blue-500"},
-    {"id": 3, "nom": "👻 Ethan", "couleur": "red-500"}
+    {
+        "id": 1,
+        "nom": "Ethan",
+        "emoji": "\ud83d\udc66",
+        "couleur": "amber-500"
+    },
+    {
+        "id": 2,
+        "nom": "Jim",
+        "emoji": "\ud83d\udc68",
+        "couleur": "blue-500"
+    },
+    {
+        "id": 3,
+        "nom": "Lucie",
+        "emoji": "\ud83d\udc69",
+        "couleur": "pink-500"
+    }
 ]
