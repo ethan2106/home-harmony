@@ -34,7 +34,7 @@ include __DIR__ . '/../../includes/navbar.php';
                     // Catégorisation simplifiée pour le filtre JS
                     $cat = ($task['zone'] === 'jardin') ? 'jardin' :
                            (($task['zone'] === 'voiture') ? 'voiture' : 'maison');
-                ?>
+                    ?>
                     <div class="glass-card p-8 rounded-6xl flex flex-col justify-between gap-8 group bg-white/80 hover:bg-white border border-white shadow-sm transition-all" data-category="<?php echo $cat; ?>">
                         <div class="flex justify-between items-center">
                             <div class="flex gap-5">
@@ -74,7 +74,7 @@ include __DIR__ . '/../../includes/navbar.php';
         </div>
 
         <!-- SECTION DES TÂCHES TERMINÉES (ARCHIVES) -->
-        <?php if (!empty($doneTasks)): ?>
+        <?php if (! empty($doneTasks)): ?>
         <section class="mt-24">
             <div class="flex items-center gap-6 mb-10">
                 <span class="h-0.5 bg-slate-300/30 grow rounded-full"></span>
@@ -84,8 +84,8 @@ include __DIR__ . '/../../includes/navbar.php';
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($doneTasks as $task):
-                    $profile = array_values(array_filter($profiles, fn($p) => $p['nom'] === $task['fait_par']))[0] ?? null;
-                ?>
+                    $profile = array_values(array_filter($profiles, fn ($p) => $p['nom'] === $task['fait_par']))[0] ?? null;
+                    ?>
                     <div onclick="undoTask(<?php echo $task['id']; ?>, this)" class="group relative cursor-pointer p-5 bg-white/40 border-2 border-white rounded-4xl flex items-center gap-5 opacity-80 hover:opacity-100 hover:border-red-200 transition-all backdrop-blur-md shadow-sm overflow-hidden">
                         <!-- Badge d'annulation au survol -->
                         <div class="absolute inset-0 bg-red-50/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">

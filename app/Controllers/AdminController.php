@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Contrôleur Admin - Gestion de l'administration
  */
+
 namespace App\Controllers;
 
-use App\Controllers\Controller;
+use App\Models\RoomModel;
 use App\Models\TaskModel;
 use App\Models\UserModel;
-use App\Models\RoomModel;
 
 class AdminController extends Controller
 {
@@ -40,7 +41,7 @@ class AdminController extends Controller
             'tasks' => $taskModel->getAllTasksWithRooms(),
             'rooms' => $roomModel->getAllRooms(),
             'profiles' => $userModel->getAllUsers(),
-            'reset_success' => isset($_GET['reset_success'])
+            'reset_success' => isset($_GET['reset_success']),
         ];
 
         $this->view('admin', $data);
@@ -77,12 +78,12 @@ class AdminController extends Controller
             $emoji = $_POST['emoji'] ?? '';
             $couleur = $_POST['couleur'] ?? 'indigo-500';
 
-            if (!empty($nom)) {
+            if (! empty($nom)) {
                 $userModel = new UserModel();
                 $userModel->createUser([
                     'nom' => $nom,
                     'emoji' => $emoji,
-                    'couleur' => $couleur
+                    'couleur' => $couleur,
                 ]);
             }
         }
@@ -99,7 +100,7 @@ class AdminController extends Controller
                 'nom' => $_POST['nom'],
                 'emoji' => $_POST['emoji'],
                 'couleur' => $_POST['couleur'],
-                'zone' => $_POST['zone'] ?? 'maison'
+                'zone' => $_POST['zone'] ?? 'maison',
             ]);
         }
 
@@ -114,7 +115,7 @@ class AdminController extends Controller
             $taskModel->createTask([
                 'room_id' => $_POST['room_id'],
                 'titre' => $_POST['titre'],
-                'frequence' => $_POST['frequence']
+                'frequence' => $_POST['frequence'],
             ]);
         }
 

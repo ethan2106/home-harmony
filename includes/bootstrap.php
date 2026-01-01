@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bootstrap Harmony - Version SQLite & MVC Light
  * Gère la connexion, les tables et le Reset Quotidien.
@@ -9,10 +10,10 @@ require_once __DIR__ . '/functions.php';
 // 1. Connexion SQLite (Le fichier sera créé dans /data/)
 try {
     $dbPath = __DIR__ . '/../data/harmony.sq3';
-    if (!is_dir(__DIR__ . '/../data/')) {
+    if (! is_dir(__DIR__ . '/../data/')) {
         mkdir(__DIR__ . '/../data/', 0777, true);
     }
-    
+
     $pdo = new PDO("sqlite:" . $dbPath);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -21,7 +22,7 @@ try {
 }
 
 // Définition de la base URL pour le routage
-define('BASE_URL', ''); 
+define('BASE_URL', '');
 
 // 2. Création des tables (Schéma initial)
 $pdo->exec("
@@ -93,7 +94,9 @@ $history = $pdo->query("SELECT * FROM history ORDER BY date_action DESC")->fetch
 // --- 5. STATISTIQUES ---
 $stats = [];
 $currentMonth = date('Y-m');
-foreach ($profiles as $p) { $stats[$p['nom']] = 0; }
+foreach ($profiles as $p) {
+    $stats[$p['nom']] = 0;
+}
 foreach ($history as $entry) {
     if (isset($entry['date_action']) && strpos($entry['date_action'], $currentMonth) === 0) {
         if (isset($entry['profil']) && isset($stats[$entry['profil']])) {
@@ -104,4 +107,3 @@ foreach ($history as $entry) {
 
 // --- 6. DATE ---
 $date_fr = getFrenchDate();
-

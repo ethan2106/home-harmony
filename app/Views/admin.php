@@ -152,7 +152,7 @@ include __DIR__ . '/../../includes/navbar.php';
                             <?php
                                 // Extract emoji if it's in the name or if we add an emoji field
                                 echo isset($profile['emoji']) ? $profile['emoji'] : substr($profile['nom'], 0, 1);
-                            ?>
+                    ?>
                         </div>
                         <span class="font-bold text-gray-800"><?php echo $profile['nom']; ?></span>
                     </div>

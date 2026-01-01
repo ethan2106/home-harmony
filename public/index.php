@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Point d'entrée principal de l'application
  * Utilise le routeur pour diriger vers les contrôleurs appropriés
@@ -6,6 +7,13 @@
 
 // Autoloading Composer
 require_once '../vendor/autoload.php';
+
+// Gestion des erreurs avec Whoops (en développement)
+if (class_exists('\Whoops\Run')) {
+    $whoops = new \Whoops\Run();
+    $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
+    $whoops->register();
+}
 
 require_once '../includes/bootstrap.php';
 

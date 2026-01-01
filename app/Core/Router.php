@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routeur simple pour Home Harmony
  * Dirige les requêtes vers les contrôleurs appropriés.
@@ -6,14 +7,17 @@
 
 namespace App\Core;
 
-class Router {
+class Router
+{
     private $routes = [];
 
-    public function addRoute($path, $controllerAction) {
+    public function addRoute($path, $controllerAction)
+    {
         $this->routes[$path] = $controllerAction;
     }
 
-    public function dispatch() {
+    public function dispatch()
+    {
         $requestUri = $_SERVER['REQUEST_URI'];
 
         // Supprimer les paramètres de requête

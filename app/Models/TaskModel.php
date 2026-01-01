@@ -1,21 +1,24 @@
 <?php
+
 namespace App\Models;
 
 require_once __DIR__ . '/BaseModel.php';
 
-class TaskModel extends BaseModel {
-
+class TaskModel extends BaseModel
+{
     /**
      * Récupère toutes les tâches avec leurs pièces associées
      * @return array
      */
-    public function getAllTasksWithRooms(): array {
+    public function getAllTasksWithRooms(): array
+    {
         $stmt = $this->pdo->query("
             SELECT t.*, r.nom as room_nom, r.emoji as room_emoji, r.couleur as room_couleur, r.zone
             FROM tasks t
             LEFT JOIN rooms r ON t.room_id = r.id
             ORDER BY t.id
         ");
+
         return $stmt->fetchAll();
     }
 
@@ -24,13 +27,16 @@ class TaskModel extends BaseModel {
      * @param string $today
      * @return array
      */
-    public function getTodoTasks(string $today): array {
+    public function getTodoTasks(string $today): array
+    {
         $tasks = $this->getAllTasksWithRooms();
-        return array_filter($tasks, function($t) use ($today) {
+
+        return array_filter($tasks, function ($t) use ($today) {
             // Si faite aujourd'hui, elle n'est plus à faire
             if (($t['dernier_fait'] ?? '') === $today) {
                 return false;
             }
+
             return $this->isTaskDue($t, $today);
         });
     }
@@ -40,22 +46,29 @@ class TaskModel extends BaseModel {
      * @param string $today
      * @return array
      */
-    public function getDoneTasks(string $today): array {
+    public function getDoneTasks(string $today): array
+    {
         $tasks = $this->getAllTasksWithRooms();
-        return array_filter($tasks, function($t) use ($today) {
+
+        return array_filter($tasks, function ($t) use ($today) {
             return ($t['dernier_fait'] ?? '') === $today;
         });
     }
 
-    private function isTaskDue($task, $today) {
+    private function isTaskDue($task, $today)
+    {
         // Si jamais faite, elle est due
-        if (empty($task['dernier_fait'])) return true;
+        if (empty($task['dernier_fait'])) {
+            return true;
+        }
 
         $lastDone = new \DateTime($task['dernier_fait']);
         $now = new \DateTime($today);
-        
+
         // Si la date de dernière réalisation est dans le futur, on ne l'affiche pas
-        if ($now < $lastDone) return false;
+        if ($now < $lastDone) {
+            return false;
+        }
 
         $diff = $now->diff($lastDone)->days;
 
@@ -73,8 +86,10 @@ class TaskModel extends BaseModel {
      * @param int $id
      * @return bool
      */
-    public function deleteTask(int $id): bool {
+    public function deleteTask(int $id): bool
+    {
         $stmt = $this->pdo->prepare("DELETE FROM tasks WHERE id = ?");
+
         return $stmt->execute([$id]);
     }
 
@@ -83,13 +98,15 @@ class TaskModel extends BaseModel {
      * @param array $data
      * @return bool
      */
-    public function createTask(array $data): bool {
+    public function createTask(array $data): bool
+    {
         $stmt = $this->pdo->prepare("INSERT INTO tasks (room_id, titre, frequence, date_creation) VALUES (?, ?, ?, ?)");
+
         return $stmt->execute([
             $data['room_id'],
             $data['titre'],
             $data['frequence'],
-            date('Y-m-d')
+            date('Y-m-d'),
         ]);
     }
 
@@ -99,7 +116,8 @@ class TaskModel extends BaseModel {
      * @param int|null $userId
      * @return array ['success' => bool, 'points' => int]
      */
-    public function validateTask(int $taskId, ?int $userId): array {
+    public function validateTask(int $taskId, ?int $userId): array
+    {
         $today = date('Y-m-d');
 
         // Vérifier si la tâche est déjà faite aujourd'hui
@@ -147,7 +165,8 @@ class TaskModel extends BaseModel {
      * @param int $taskId
      * @return array ['success' => bool]
      */
-    public function undoTask(int $taskId): array {
+    public function undoTask(int $taskId): array
+    {
         $today = date('Y-m-d');
 
         // Récupérer les infos de l'historique avant suppression pour les points
@@ -180,13 +199,15 @@ class TaskModel extends BaseModel {
      * @param int $taskId
      * @return bool
      */
-    public function pickTask(int $taskId): bool {
+    public function pickTask(int $taskId): bool
+    {
         // TODO: Implémenter la logique de sélection de tâche
         // Pour l'instant, on retourne true sans modification
         return true;
     }
 
-    private function calculatePoints($taskId) {
+    private function calculatePoints($taskId)
+    {
         // Logique de calcul des points (simplifiée)
         return 10; // Points fixes pour l'instant
     }
@@ -195,8 +216,10 @@ class TaskModel extends BaseModel {
      * Remet à zéro toutes les tâches (enlève les dates prévues)
      * @return bool
      */
-    public function resetAllTasks(): bool {
+    public function resetAllTasks(): bool
+    {
         $stmt = $this->pdo->prepare("UPDATE tasks SET date_prevue = NULL");
+
         return $stmt->execute();
     }
 
@@ -204,7 +227,8 @@ class TaskModel extends BaseModel {
      * Reset complet de toutes les données
      * @return bool
      */
-    public function resetAllData(): bool {
+    public function resetAllData(): bool
+    {
         // Reset des tables
         $this->pdo->exec("DELETE FROM tasks");
         $this->pdo->exec("DELETE FROM rooms");

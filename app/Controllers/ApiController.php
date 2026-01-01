@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Contrôleur API - Gestion des appels AJAX
  */
+
 namespace App\Controllers;
 
-use App\Controllers\Controller;
 use App\Models\TaskModel;
 use App\Models\UserModel;
 use Exception;
@@ -22,6 +23,7 @@ class ApiController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false, 'error' => 'Méthode non autorisée']);
+
             return;
         }
 
@@ -29,8 +31,9 @@ class ApiController extends Controller
         $profilNom = $_POST['profil'] ?? null;
         $today = date('Y-m-d');
 
-        if (!$taskId) {
+        if (! $taskId) {
             echo json_encode(['success' => false, 'error' => 'ID manquant']);
+
             return;
         }
 
@@ -45,15 +48,16 @@ class ApiController extends Controller
             // 2. Valider la tâche
             $result = $taskModel->validateTask($taskId, $userId);
 
-            if (!$result['success']) {
+            if (! $result['success']) {
                 echo json_encode($result);
+
                 return;
             }
 
             echo json_encode([
                 'success' => true,
                 'points' => $result['points'],
-                'message' => 'Tâche validée avec succès !'
+                'message' => 'Tâche validée avec succès !',
             ]);
 
         } catch (Exception $e) {
@@ -67,14 +71,16 @@ class ApiController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false, 'error' => 'Méthode non autorisée']);
+
             return;
         }
 
         $taskId = $_POST['id'] ?? null;
         $today = date('Y-m-d');
 
-        if (!$taskId) {
+        if (! $taskId) {
             echo json_encode(['success' => false, 'error' => 'ID manquant']);
+
             return;
         }
 
@@ -96,14 +102,16 @@ class ApiController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false, 'error' => 'Méthode non autorisée']);
+
             return;
         }
 
         $taskId = $_POST['id'] ?? null;
         $today = date('Y-m-d');
 
-        if (!$taskId) {
+        if (! $taskId) {
             echo json_encode(['success' => false, 'error' => 'ID manquant']);
+
             return;
         }
 
