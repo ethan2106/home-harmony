@@ -91,16 +91,25 @@ include 'includes/navbar.php';
                         <?php foreach ($doneTasks as $task): 
                             $profile = array_values(array_filter($profiles, fn($p) => $p['nom'] === $task['fait_par']))[0] ?? null;
                         ?>
-                            <div class="p-5 bg-white/40 border-2 border-white rounded-[2rem] flex items-center gap-5 opacity-80 backdrop-blur-md shadow-sm">
+                            <div onclick="undoTask(<?php echo $task['id']; ?>, this)" class="group relative cursor-pointer p-5 bg-white/40 border-2 border-white rounded-[2rem] flex items-center gap-5 opacity-80 hover:opacity-100 hover:border-red-200 transition-all backdrop-blur-md shadow-sm overflow-hidden">
+                                <!-- Badge d'annulation au survol -->
+                                <div class="absolute inset-0 bg-red-50/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                    <div class="flex items-center gap-2 text-red-600 font-black uppercase text-xs tracking-widest">
+                                        <span class="text-lg">✕</span> Annuler
+                                    </div>
+                                </div>
+
                                 <div class="w-12 h-12 rounded-2xl bg-<?php echo $profile['couleur'] ?? 'slate-400'; ?> flex items-center justify-center text-white text-sm font-black shadow-lg shrink-0">
                                     <?php echo (isset($profile['emoji']) && $profile['emoji']) ? $profile['emoji'] : substr($task['fait_par'] ?? '?', 0, 1); ?>
                                 </div>
-                                <div class="truncate">
+                                <div class="truncate grow">
                                     <h4 class="text-base font-bold text-slate-400 line-through truncate"><?php echo $task['titre']; ?></h4>
                                     <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Gagné par <?php echo $task['fait_par']; ?></p>
                                 </div>
                             </div>
                         <?php endforeach; ?>
+
+
                     </div>
                 </section>
                 <?php endif; ?>

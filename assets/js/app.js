@@ -18,11 +18,14 @@ async function toggleTaskLux(taskId, element) {
         // Animation d'alerte sur le sélecteur de profil
         const selector = document.getElementById('profile-selector');
         if (selector) {
-            selector.classList.add('ring-4', 'ring-red-400', 'animate-pulse');
-            setTimeout(() => selector.classList.remove('ring-4', 'ring-red-400', 'animate-pulse'), 1500);
+            selector.classList.add('ring-4', 'ring-red-400', 'animate-shake');
+            console.warn("Action bloquée : Aucun profil sélectionné.");
+            setTimeout(() => selector.classList.remove('ring-4', 'ring-red-400', 'animate-shake'), 1000);
         }
         return;
     }
+
+
 
     // Animation visuelle de validation
     element.classList.add('checked', 'bg-indigo-600');
@@ -51,7 +54,29 @@ async function toggleTaskLux(taskId, element) {
     }, 600);
 }
 
+async function undoTask(taskId, element) {
+    if (!confirm("Voulez-vous annuler cette tâche et la remettre en 'À faire' ?")) return;
+
+    element.classList.add('scale-95', 'opacity-50');
+    
+    try {
+        const response = await fetch('update_task.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${taskId}` // Pas besoin de profil pour annuler
+        });
+
+        if (response.ok) {
+            location.reload();
+        }
+    } catch (error) {
+        console.error("Erreur lors de l'annulation :", error);
+        element.classList.remove('scale-95', 'opacity-50');
+    }
+}
+
 function filterTasks(category, btn) {
+
     // Mise à jour visuelle des boutons de filtre
     document.querySelectorAll('.filter-btn').forEach(b => {
         b.classList.remove('bg-slate-900', 'text-white', 'filter-btn-active');

@@ -18,8 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $today = date('Y-m-d');
             $history = loadData('history.json');
 
-            // Si déjà fait aujourd'hui, on annule
-            if (($task['dernier_fait'] ?? '') === $today) {
+            // Si on ne reçoit pas de profil, on force l'annulation (undo)
+            // OU si la tâche est déjà marquée comme faite aujourd'hui
+            if (!$profil || ($task['dernier_fait'] ?? '') === $today) {
                 $task['dernier_fait'] = null;
                 $task['fait_par'] = null;
                 
@@ -47,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
         }
     }
+
     
     saveData('tasks.json', $tasks);
     
