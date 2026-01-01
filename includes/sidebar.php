@@ -13,7 +13,7 @@
                         <span class="font-bold text-slate-700"><?php echo $profile['nom']; ?></span>
                     </div>
                     <div class="flex flex-col items-end">
-                        <span class="text-xl font-black text-slate-900"><?php echo $stats[$profile['nom']] ?? 0; ?></span>
+                        <span id="stat-<?php echo $profile['nom']; ?>" class="text-xl font-black text-slate-900"><?php echo $stats[$profile['nom']] ?? 0; ?></span>
                         <span class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">tâches</span>
                     </div>
                 </div>

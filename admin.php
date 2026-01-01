@@ -90,6 +90,15 @@ if (isset($_GET['delete_profile'])) {
                         <input type="hidden" name="couleur" id="selected-color" required>
                     </div>
 
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Zone de la pièce</label>
+                        <select name="zone" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                            <option value="maison">🏠 Maison</option>
+                            <option value="jardin">🌳 Jardin</option>
+                            <option value="voiture">🚗 Voiture</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-colors shadow-lg">
                         + Ajouter la pièce
                     </button>
@@ -120,8 +129,6 @@ if (isset($_GET['delete_profile'])) {
                             <?php foreach ($rooms as $room): ?>
                                 <option value="<?php echo $room['id']; ?>"><?php echo $room['emoji']; ?> <?php echo $room['nom']; ?></option>
                             <?php endforeach; ?>
-                            <option value="jardin">🌳 Jardin</option>
-                            <option value="voiture">🚗 Voiture</option>
                         </select>
                     </div>
                     <div class="mb-6">
@@ -215,25 +222,8 @@ if (isset($_GET['delete_profile'])) {
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="py-4 font-medium text-gray-800"><?php echo $task['titre']; ?></td>
                             <td class="py-4">
-                                <?php 
-                                    $roomName = "Général";
-                                    $roomEmoji = "📋";
-                                    if (isset($task['room_id'])) {
-                                        if ($task['room_id'] === 'jardin') { $roomName = "Jardin"; $roomEmoji = "🌳"; }
-                                        elseif ($task['room_id'] === 'voiture') { $roomName = "Voiture"; $roomEmoji = "🚗"; }
-                                        else {
-                                            foreach ($rooms as $r) {
-                                                if ($r['id'] == $task['room_id']) {
-                                                    $roomName = $r['nom'];
-                                                    $roomEmoji = $r['emoji'];
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                ?>
                                 <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600">
-                                    <?php echo $roomEmoji; ?> <?php echo $roomName; ?>
+                                    <?php echo $task['room_emoji'] ?? '📋'; ?> <?php echo $task['room_nom'] ?? 'Général'; ?>
                                 </span>
                             </td>
                             <td class="py-4 text-gray-500 text-sm"><?php echo $task['frequence']; ?></td>
