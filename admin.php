@@ -39,12 +39,13 @@ if (isset($_GET['delete_profile'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuration - Entretien</title>
+    <title>Configuration - Harmony</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="bg-gray-100 min-h-screen">
+
 
     <div class="container mx-auto py-8 px-4">
         <header class="flex justify-between items-center mb-10 bg-white p-6 rounded-xl shadow-sm">
