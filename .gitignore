@@ -1,33 +1,33 @@
 # Fichiers sensibles et données utilisateur
 data/*.sq3
+data/*.db
 data/last_reset.txt
 last_reset.txt
-
-# Fichiers de test et développement
-beta_test.md
-
-# Logs et fichiers temporaires
-*.log
-*.tmp
-temp/
-logs/
-
-# Cache PHP si utilisé
-cache/
-*.cache
-
-# Environnements locaux
 .env
 .env.local
+.env.*.local
 
-# Dossiers de dépendances (si ajoutées plus tard)
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Dépendances
 vendor/
 node_modules/
+dist/
 
-# Fichiers système
-.DS_Store
-Thumbs.db
-
-# Éditeur
+# IDE & OS
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Cache
+.phpunit.result.cache
+.php-cs-fixer.cache
+.eslintcache
