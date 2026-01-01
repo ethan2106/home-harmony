@@ -17,6 +17,9 @@ class ApiController extends Controller
         // Les modèles sont chargés automatiquement via Composer
     }
 
+    /**
+     * @return void
+     */
     public function updateTask()
     {
         header('Content-Type: application/json');
@@ -29,7 +32,6 @@ class ApiController extends Controller
 
         $taskId = $_POST['id'] ?? null;
         $profilNom = $_POST['profil'] ?? null;
-        $today = date('Y-m-d');
 
         if (! $taskId) {
             echo json_encode(['success' => false, 'error' => 'ID manquant']);
@@ -43,10 +45,10 @@ class ApiController extends Controller
 
             // 1. Récupérer l'ID de l'utilisateur à partir de son nom
             $user = $userModel->getUserByName($profilNom);
-            $userId = $user ? $user['id'] : null;
+            $userId = $user ? (int)$user['id'] : null;
 
             // 2. Valider la tâche
-            $result = $taskModel->validateTask($taskId, $userId);
+            $result = $taskModel->validateTask((int)$taskId, $userId);
 
             if (! $result['success']) {
                 echo json_encode($result);
@@ -56,7 +58,7 @@ class ApiController extends Controller
 
             echo json_encode([
                 'success' => true,
-                'points' => $result['points'],
+                'points' => $result['points'] ?? 0,
                 'message' => 'Tâche validée avec succès !',
             ]);
 
@@ -65,6 +67,9 @@ class ApiController extends Controller
         }
     }
 
+    /**
+     * @return void
+     */
     public function pickTask()
     {
         header('Content-Type: application/json');
@@ -76,7 +81,6 @@ class ApiController extends Controller
         }
 
         $taskId = $_POST['id'] ?? null;
-        $today = date('Y-m-d');
 
         if (! $taskId) {
             echo json_encode(['success' => false, 'error' => 'ID manquant']);
@@ -87,7 +91,7 @@ class ApiController extends Controller
         try {
             $taskModel = new TaskModel();
 
-            $result = $taskModel->pickTask($taskId);
+            $result = $taskModel->pickTask((int)$taskId);
 
             echo json_encode(['success' => $result]);
 
@@ -96,6 +100,9 @@ class ApiController extends Controller
         }
     }
 
+    /**
+     * @return void
+     */
     public function undoTask()
     {
         header('Content-Type: application/json');
@@ -107,7 +114,6 @@ class ApiController extends Controller
         }
 
         $taskId = $_POST['id'] ?? null;
-        $today = date('Y-m-d');
 
         if (! $taskId) {
             echo json_encode(['success' => false, 'error' => 'ID manquant']);
@@ -118,7 +124,7 @@ class ApiController extends Controller
         try {
             $taskModel = new TaskModel();
 
-            $result = $taskModel->undoTask($taskId);
+            $result = $taskModel->undoTask((int)$taskId);
 
             echo json_encode($result);
 

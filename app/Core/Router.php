@@ -9,19 +9,32 @@ namespace App\Core;
 
 class Router
 {
+    /** @var array<string, string> */
     private $routes = [];
 
+    /**
+     * @param string $path
+     * @param string $controllerAction
+     * @return void
+     */
     public function addRoute($path, $controllerAction)
     {
         $this->routes[$path] = $controllerAction;
     }
 
+    /**
+     * @return void
+     */
     public function dispatch()
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 
         // Supprimer les paramètres de requête
         $path = parse_url($requestUri, PHP_URL_PATH);
+
+        if ($path === false || $path === null) {
+            $path = '/';
+        }
 
         // Enlever le préfixe du projet si nécessaire (ex: /project-x/)
         $path = str_replace('/project-x/public', '', $path);

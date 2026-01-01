@@ -17,6 +17,9 @@ class AdminController extends Controller
         // Les modèles sont maintenant chargés automatiquement via Composer
     }
 
+    /**
+     * @return void
+     */
     public function index()
     {
         // Gestion des suppressions
@@ -47,30 +50,45 @@ class AdminController extends Controller
         $this->view('admin', $data);
     }
 
+    /**
+     * @param mixed $id
+     * @return void
+     */
     private function deleteTask($id)
     {
         $taskModel = new TaskModel();
-        $taskModel->deleteTask($id);
+        $taskModel->deleteTask((int)$id);
         header('Location: /admin');
         exit;
     }
 
+    /**
+     * @param mixed $id
+     * @return void
+     */
     private function deleteRoom($id)
     {
         $roomModel = new RoomModel();
-        $roomModel->deleteRoom($id);
+        $roomModel->deleteRoom((int)$id);
         header('Location: /admin');
         exit;
     }
 
+    /**
+     * @param mixed $id
+     * @return void
+     */
     private function deleteProfile($id)
     {
         $userModel = new UserModel();
-        $userModel->deleteUser($id);
+        $userModel->deleteUser((int)$id);
         header('Location: /admin');
         exit;
     }
 
+    /**
+     * @return void
+     */
     public function addProfile()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -92,6 +110,9 @@ class AdminController extends Controller
         exit;
     }
 
+    /**
+     * @return void
+     */
     public function addRoom()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -108,12 +129,15 @@ class AdminController extends Controller
         exit;
     }
 
+    /**
+     * @return void
+     */
     public function addTask()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $taskModel = new TaskModel();
             $taskModel->createTask([
-                'room_id' => $_POST['room_id'],
+                'room_id' => (int)$_POST['room_id'],
                 'titre' => $_POST['titre'],
                 'frequence' => $_POST['frequence'],
             ]);
@@ -123,6 +147,9 @@ class AdminController extends Controller
         exit;
     }
 
+    /**
+     * @return void
+     */
     public function clearList()
     {
         $taskModel = new TaskModel();
@@ -132,6 +159,9 @@ class AdminController extends Controller
         exit;
     }
 
+    /**
+     * @return void
+     */
     public function resetApp()
     {
         $taskModel = new TaskModel();

@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array<int, array<string, mixed>> $profiles
+ * @var string|null $date_fr
+ */
+?>
 <!-- BARRE DE NAVIGATION SUPÉRIEURE -->
 <nav class="flex flex-col md:flex-row justify-between items-center py-10 gap-8">
     <a href="<?php echo BASE_URL; ?>/" class="flex items-center gap-4 hover:opacity-80 transition-opacity">

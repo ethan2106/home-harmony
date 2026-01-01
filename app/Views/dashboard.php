@@ -1,6 +1,12 @@
 <?php
 /**
  * Vue Dashboard - Affichage principal
+ * 
+ * @var array<int, array<string, mixed>> $todoTasks Liste des tâches à faire
+ * @var array<int, array<string, mixed>> $doneTasks Liste des tâches terminées
+ * @var array<int, array<string, mixed>> $profiles Liste des profils utilisateurs
+ * @var array<int, array<string, mixed>> $rooms Liste des pièces
+ * @var array<string, int> $stats Statistiques globales
  */
 require_once __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/navbar.php';

@@ -6,6 +6,7 @@ use App\Models\TaskModel;
 
 class DashboardController extends Controller
 {
+    /** @var TaskModel */
     private $taskModel;
 
     public function __construct()
@@ -13,6 +14,9 @@ class DashboardController extends Controller
         $this->taskModel = new TaskModel();
     }
 
+    /**
+     * @return void
+     */
     public function index()
     {
         // Inclure bootstrap pour charger les variables globales

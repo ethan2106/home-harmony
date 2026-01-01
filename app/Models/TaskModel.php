@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-require_once __DIR__ . '/BaseModel.php';
+use DateTime;
 
 class TaskModel extends BaseModel
 {
     /**
      * Récupère toutes les tâches avec leurs pièces associées
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getAllTasksWithRooms(): array
     {
@@ -19,42 +19,47 @@ class TaskModel extends BaseModel
             ORDER BY t.id
         ");
 
-        return $stmt->fetchAll();
+        return $stmt ? $stmt->fetchAll() : [];
     }
 
     /**
      * Récupère les tâches à faire pour une date donnée
      * @param string $today
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getTodoTasks(string $today): array
     {
         $tasks = $this->getAllTasksWithRooms();
 
-        return array_filter($tasks, function ($t) use ($today) {
+        return array_filter($tasks, function ($taskItem) use ($today) {
             // Si faite aujourd'hui, elle n'est plus à faire
-            if (($t['dernier_fait'] ?? '') === $today) {
+            if (($taskItem['dernier_fait'] ?? '') === $today) {
                 return false;
             }
 
-            return $this->isTaskDue($t, $today);
+            return $this->isTaskDue($taskItem, $today);
         });
     }
 
     /**
      * Récupère les tâches terminées pour une date donnée
      * @param string $today
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getDoneTasks(string $today): array
     {
         $tasks = $this->getAllTasksWithRooms();
 
-        return array_filter($tasks, function ($t) use ($today) {
-            return ($t['dernier_fait'] ?? '') === $today;
+        return array_filter($tasks, function ($taskItem) use ($today) {
+            return ($taskItem['dernier_fait'] ?? '') === $today;
         });
     }
 
+    /**
+     * @param array<string, mixed> $task
+     * @param string $today
+     * @return bool
+     */
     private function isTaskDue($task, $today)
     {
         // Si jamais faite, elle est due
@@ -62,8 +67,8 @@ class TaskModel extends BaseModel
             return true;
         }
 
-        $lastDone = new \DateTime($task['dernier_fait']);
-        $now = new \DateTime($today);
+        $lastDone = new DateTime((string)$task['dernier_fait']);
+        $now = new DateTime($today);
 
         // Si la date de dernière réalisation est dans le futur, on ne l'affiche pas
         if ($now < $lastDone) {
@@ -95,7 +100,7 @@ class TaskModel extends BaseModel
 
     /**
      * Crée une nouvelle tâche
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return bool
      */
     public function createTask(array $data): bool
@@ -114,7 +119,7 @@ class TaskModel extends BaseModel
      * Valide une tâche et attribue des points
      * @param int $taskId
      * @param int|null $userId
-     * @return array ['success' => bool, 'points' => int]
+     * @return array{success: bool, points?: int, error?: string}
      */
     public function validateTask(int $taskId, ?int $userId): array
     {
@@ -163,7 +168,7 @@ class TaskModel extends BaseModel
     /**
      * Annule la validation d'une tâche
      * @param int $taskId
-     * @return array ['success' => bool]
+     * @return array{success: bool}
      */
     public function undoTask(int $taskId): array
     {
@@ -203,12 +208,19 @@ class TaskModel extends BaseModel
     {
         // TODO: Implémenter la logique de sélection de tâche
         // Pour l'instant, on retourne true sans modification
-        return true;
+        return (bool)$taskId;
     }
 
+    /**
+     * @param int $taskId
+     * @return int
+     */
     private function calculatePoints($taskId)
     {
         // Logique de calcul des points (simplifiée)
+        if ($taskId > 0) {
+            return 10;
+        }
         return 10; // Points fixes pour l'instant
     }
 

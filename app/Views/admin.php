@@ -1,6 +1,11 @@
 <?php
 /**
  * Vue Admin - Interface d'administration
+ * 
+ * @var array<int, array<string, mixed>> $tasks Liste de toutes les tâches
+ * @var array<int, array<string, mixed>> $rooms Liste de toutes les pièces
+ * @var array<int, array<string, mixed>> $profiles Liste de tous les profils
+ * @var bool $reset_success Indicateur de succès de la remise à zéro
  */
 require_once __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/navbar.php';

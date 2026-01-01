@@ -87,9 +87,14 @@ if ($lastReset !== $today) {
 }
 
 // 4. Chargement des données globales
-$profiles = $pdo->query("SELECT * FROM users")->fetchAll();
-$rooms = $pdo->query("SELECT * FROM rooms")->fetchAll();
-$history = $pdo->query("SELECT * FROM history ORDER BY date_action DESC")->fetchAll();
+$profilesQuery = $pdo->query("SELECT * FROM users");
+$profiles = $profilesQuery ? $profilesQuery->fetchAll() : [];
+
+$roomsQuery = $pdo->query("SELECT * FROM rooms");
+$rooms = $roomsQuery ? $roomsQuery->fetchAll() : [];
+
+$historyQuery = $pdo->query("SELECT * FROM history ORDER BY date_action DESC");
+$history = $historyQuery ? $historyQuery->fetchAll() : [];
 
 // --- 5. STATISTIQUES ---
 $stats = [];

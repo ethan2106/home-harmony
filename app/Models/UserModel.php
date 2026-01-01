@@ -6,56 +6,89 @@
 
 namespace App\Models;
 
-require_once __DIR__ . '/BaseModel.php';
-
 class UserModel extends BaseModel
 {
+    /** @var string */
     protected $table = 'users';
 
-    public function getAllUsers()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAllUsers(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM users ORDER BY nom ASC");
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
     }
 
-    public function getUserById($id)
+    /**
+     * @param int $id
+     * @return array<string, mixed>|null
+     */
+    public function getUserById(int $id): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->execute([$id]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
 
-    public function getUserByName($name)
+    /**
+     * @param string|null $name
+     * @return array<string, mixed>|null
+     */
+    public function getUserByName(?string $name): ?array
     {
+        if ($name === null) {
+            return null;
+        }
+
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE nom = ?");
         $stmt->execute([$name]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
 
-    public function createUser($data)
+    /**
+     * @param array<string, mixed> $data
+     * @return bool
+     */
+    public function createUser($data): bool
     {
         $stmt = $this->pdo->prepare("INSERT INTO users (nom, emoji, couleur) VALUES (?, ?, ?)");
 
         return $stmt->execute([$data['nom'], $data['emoji'], $data['couleur']]);
     }
 
-    public function updateUser($id, $data)
+    /**
+     * @param int $id
+     * @param array<string, mixed> $data
+     * @return bool
+     */
+    public function updateUser($id, $data): bool
     {
         $stmt = $this->pdo->prepare("UPDATE users SET nom = ?, emoji = ?, couleur = ? WHERE id = ?");
 
         return $stmt->execute([$data['nom'], $data['emoji'], $data['couleur'], $id]);
     }
 
-    public function deleteUser($id)
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteUser($id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
 
         return $stmt->execute([$id]);
     }
 
+    /**
+     * @param int $userId
+     * @return array<string, mixed>|false
+     */
     public function getUserStats($userId)
     {
         $stmt = $this->pdo->prepare("

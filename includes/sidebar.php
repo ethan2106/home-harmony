@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array<int, array<string, mixed>> $profiles
+ * @var array<string, int> $stats
+ * @var array<int, array<string, mixed>> $rooms
+ */
+?>
 <!-- COLONNE GAUCHE : STATS & CATÉGORIES -->
 <div class="lg:col-span-3 space-y-8">
     <!-- LEADERBOARD (Tableau d'Honneur) -->

@@ -7,6 +7,9 @@
 /**
  * Retourne la date du jour en français
  */
+/**
+ * @return string
+ */
 function getFrenchDate()
 {
     $jours = [

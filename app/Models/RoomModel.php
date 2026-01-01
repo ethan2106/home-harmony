@@ -6,56 +6,84 @@
 
 namespace App\Models;
 
-require_once __DIR__ . '/BaseModel.php';
-
 class RoomModel extends BaseModel
 {
+    /** @var string */
     protected $table = 'rooms';
 
-    public function getAllRooms()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAllRooms(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM rooms ORDER BY nom ASC");
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
     }
 
-    public function getRoomById($id)
+    /**
+     * @param int $id
+     * @return array<string, mixed>|null
+     */
+    public function getRoomById(int $id): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM rooms WHERE id = ?");
         $stmt->execute([$id]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
 
-    public function getRoomsByZone($zone)
+    /**
+     * @param string $zone
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRoomsByZone(string $zone): array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM rooms WHERE zone = ? ORDER BY nom ASC");
         $stmt->execute([$zone]);
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt ? $stmt->fetchAll(\PDO::FETCH_ASSOC) : [];
     }
 
-    public function createRoom($data)
+    /**
+     * @param array<string, mixed> $data
+     * @return bool
+     */
+    public function createRoom($data): bool
     {
         $stmt = $this->pdo->prepare("INSERT INTO rooms (nom, emoji, couleur, zone) VALUES (?, ?, ?, ?)");
 
         return $stmt->execute([$data['nom'], $data['emoji'], $data['couleur'], $data['zone']]);
     }
 
-    public function updateRoom($id, $data)
+    /**
+     * @param int $id
+     * @param array<string, mixed> $data
+     * @return bool
+     */
+    public function updateRoom($id, $data): bool
     {
         $stmt = $this->pdo->prepare("UPDATE rooms SET nom = ?, emoji = ?, couleur = ?, zone = ? WHERE id = ?");
 
         return $stmt->execute([$data['nom'], $data['emoji'], $data['couleur'], $data['zone'], $id]);
     }
 
-    public function deleteRoom($id)
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteRoom($id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM rooms WHERE id = ?");
 
         return $stmt->execute([$id]);
     }
 
+    /**
+     * @param int $roomId
+     * @return array<string, mixed>|false
+     */
     public function getRoomStats($roomId)
     {
         $stmt = $this->pdo->prepare("
