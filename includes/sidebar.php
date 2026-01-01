@@ -1,7 +1,7 @@
 <!-- COLONNE GAUCHE : STATS & CATÉGORIES -->
 <div class="lg:col-span-3 space-y-8">
     <!-- LEADERBOARD (Tableau d'Honneur) -->
-    <div class="glass-panel p-6 rounded-[2.5rem] border border-white shadow-sm bg-white/40">
+    <div class="glass-panel p-6 rounded-5xl border border-white shadow-sm bg-white/40">
         <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Tableau d'Honneur</h3>
         <div class="space-y-4">
             <?php foreach ($profiles as $profile): ?>
@@ -22,7 +22,7 @@
     </div>
 
     <!-- MENU DES ZONES -->
-    <div class="glass-panel p-6 rounded-[2.5rem] border border-white shadow-sm bg-white/40">
+    <div class="glass-panel p-6 rounded-5xl border border-white shadow-sm bg-white/40">
         <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Zones</h3>
         <div class="grid grid-cols-1 gap-3">
             <button onclick="filterTasks('all', this)" class="filter-btn filter-btn-active group flex items-center justify-between p-4 rounded-2xl bg-white/50 text-slate-600 transition-all border border-slate-200">
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <a href="admin.php" class="flex items-center justify-center p-6 rounded-[2.5rem] bg-indigo-50 text-indigo-700 font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-600 hover:text-white transition-all border-2 border-indigo-100/50 shadow-sm">
+    <a href="<?php echo BASE_URL; ?>/admin" class="flex items-center justify-center p-6 rounded-5xl bg-indigo-50 text-indigo-700 font-black text-xs uppercase tracking-[0.2em] hover:bg-indigo-600 hover:text-white transition-all border-2 border-indigo-100/50 shadow-sm">
         Paramètres ⚙️
     </a>
 </div>

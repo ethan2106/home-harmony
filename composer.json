@@ -1,0 +1,14 @@
+{
+    "name": "home-harmony/project",
+    "description": "Home Harmony - Task Management Application",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {},
+    "config": {
+        "optimize-autoloader": true
+    }
+}

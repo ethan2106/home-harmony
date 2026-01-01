@@ -1,6 +1,6 @@
 function confirmReset() {
     if (confirm("Êtes-vous sûr de vouloir tout remettre à zéro ? Cette action est irréversible (tâches, pièces, profils et historique seront supprimés).")) {
-        window.location.href = 'reset_app.php';
+        window.location.href = '/admin/reset-app';
     }
 }
 

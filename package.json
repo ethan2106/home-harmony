@@ -1,0 +1,29 @@
+{
+  "name": "project-x",
+  "version": "1.0.0",
+  "description": "Home Harmony est maintenant entièrement migré vers une architecture MVC légère avec SQLite comme base de données. Toutes les fonctionnalités ont été intégrées dans le système MVC.",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css",
+    "watch-css": "tailwindcss -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethan2106/home-harmony.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ethan2106/home-harmony/issues"
+  },
+  "homepage": "https://github.com/ethan2106/home-harmony#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}

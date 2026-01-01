@@ -20,6 +20,9 @@ try {
     die("Erreur de base de données : " . $e->getMessage());
 }
 
+// Définition de la base URL pour le routage
+define('BASE_URL', ''); 
+
 // 2. Création des tables (Schéma initial)
 $pdo->exec("
     CREATE TABLE IF NOT EXISTS users (
@@ -45,6 +48,7 @@ $pdo->exec("
         frequence TEXT, -- 'Quotidien', 'Hebdomadaire', 'Mensuel', 'Saisonnier'
         dernier_fait DATE,
         fait_par TEXT,
+        date_prevue DATE,
         date_creation DATE,
         FOREIGN KEY(room_id) REFERENCES rooms(id)
     );
@@ -55,6 +59,7 @@ $pdo->exec("
         user_id INTEGER,
         date_action DATE,
         profil TEXT, -- Pour compatibilité temporaire ou historique
+        points INTEGER,
         FOREIGN KEY(task_id) REFERENCES tasks(id),
         FOREIGN KEY(user_id) REFERENCES users(id)
     );
@@ -80,19 +85,7 @@ if ($lastReset !== $today) {
     file_put_contents($configPath, $today);
 }
 
-// 4. Chargement des données pour la vue
-$tasks = $pdo->query("SELECT t.*, r.nom as room_nom, r.emoji as room_emoji, r.couleur as room_couleur, r.zone 
-                      FROM tasks t 
-                      LEFT JOIN rooms r ON t.room_id = r.id")->fetchAll();
-
-$todoTasks = array_filter($tasks, function($t) use ($today) {
-    return ($t['dernier_fait'] ?? '') !== $today && isTaskDue($t);
-});
-
-$doneTasks = array_filter($tasks, function($t) use ($today) {
-    return ($t['dernier_fait'] ?? '') === $today;
-});
-
+// 4. Chargement des données globales
 $profiles = $pdo->query("SELECT * FROM users")->fetchAll();
 $rooms = $pdo->query("SELECT * FROM rooms")->fetchAll();
 $history = $pdo->query("SELECT * FROM history ORDER BY date_action DESC")->fetchAll();

@@ -1,7 +1,6 @@
 # Fichiers sensibles et données utilisateur
 data/*.sq3
 data/last_reset.txt
-*.json
 last_reset.txt
 
 # Fichiers de test et développement

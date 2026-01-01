@@ -65,7 +65,7 @@ async function toggleTaskLux(taskId, element) {
     // Petit délai pour laisser l'animation de la checkbox se voir
     setTimeout(async () => {
         try {
-            const response = await fetch('update_task.php', {
+            const response = await fetch('/api/update-task', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `id=${taskId}&profil=${encodeURIComponent(currentProfile.name)}`
@@ -88,16 +88,7 @@ async function toggleTaskLux(taskId, element) {
                 card.classList.add('translate-x-full', 'opacity-0');
                 
                 setTimeout(() => {
-                    card.remove();
-                    
-                    // 3. Vérification du container pour le message de fin (Apéro 🥂)
-                    const container = document.getElementById('todo-container');
-                    // On compte les enfants qui n'ont pas display: none (filtres)
-                    const visibleTasks = Array.from(container.children).filter(c => c.style.display !== 'none');
-                    
-                    if (visibleTasks.length === 0) {
-                        location.reload(); 
-                    }
+                    location.reload(); // On recharge pour mettre à jour les archives et les stats
                 }, 500);
             }
         } catch (error) {
@@ -117,7 +108,7 @@ async function undoTask(taskId, element) {
     element.classList.add('scale-95', 'opacity-50');
     
     try {
-        const response = await fetch('update_task.php', {
+        const response = await fetch('/api/undo-task', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `id=${taskId}` // L'absence de profil déclenche le 'undo'

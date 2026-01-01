@@ -1,84 +1,82 @@
-# Home Harmony
+# ✨ Harmony - Gestionnaire de Tâches Ménagères
 
-Une application web simple et élégante pour gérer les tâches ménagères quotidiennes. Organisez vos corvées par pièce, fréquence et profil utilisateur, avec un suivi historique pour motiver la famille.
+**Harmony** est une application web moderne conçue pour transformer les corvées ménagères en une expérience ludique et organisée. Initialement développée en PHP procédural, l'application a subi une refonte complète vers une architecture **MVC (Modèle-Vue-Contrôleur)** robuste et performante.
 
-## Fonctionnalités
+---
 
-- **Gestion des profils** : Créez des profils pour chaque membre de la famille avec des couleurs et emojis personnalisés.
-- **Pièces et tâches** : Associez des tâches à des pièces spécifiques (salon, cuisine, jardin, etc.).
-- **Fréquences personnalisables** : Quotidien, hebdomadaire, mensuel ou saisonnier.
-- **Validation en temps réel** : Marquez les tâches comme faites avec un profil sélectionné.
-- **Annulation** : Possibilité d'annuler une tâche validée par erreur.
-- **Filtrage** : Filtrez les tâches par catégorie (Maison, Jardin, Voiture).
-- **Historique** : Suivi automatique des tâches réalisées avec dates et profils.
-- **Interface responsive** : Design moderne avec mode "Lux" pour une expérience fluide.
+## 🚀 Le Gros du Travail : La Révolution MVC
 
-## Technologies utilisées
+Le projet a été entièrement restructuré pour passer d'une multitude de fichiers isolés à une architecture professionnelle :
 
-- **Backend** : PHP (sans base de données, stockage JSON)
-- **Frontend** : HTML5, CSS3 (Tailwind CSS), JavaScript
-- **Serveur local** : Compatible avec Laragon ou XAMPP
-- **Déploiement** : Hébergement web standard avec PHP
+- **Point d'entrée unique** : Toutes les requêtes passent par `public/index.php`, garantissant une sécurité et un contrôle total.
+- **Routage Centralisé** : Un système de routage intelligent (`app/Core/Router.php`) dirige les URLs vers les bons contrôleurs.
+- **Séparation des Responsabilités** :
+    - **Models** : Gestion de la base de données SQLite (`app/Models/`).
+    - **Views** : Templates propres et réutilisables (`app/Views/`).
+    - **Controllers** : Logique métier et traitement des requêtes (`app/Controllers/`).
+- **Base de données SQLite** : Migration vers un système de fichier unique (`data/harmony.sq3`), léger et sans configuration serveur complexe.
 
-## Installation
+---
 
-1. **Clonez le repository** :
+## 🎨 Stack Technique Moderne
+
+### Frontend : Tailwind CSS v4 ⚡
+L'application utilise la toute dernière version de **Tailwind CSS (v4)** avec une approche **"CSS-first"** :
+- **Performance** : Build ultra-rapide via le nouveau CLI en Rust.
+- **Safelist Dynamique** : Gestion intelligente des couleurs de profils générées en PHP directement dans le CSS.
+- **Design "Lux"** : Interface épurée, animations fluides et composants "Glassmorphism".
+
+### Backend : PHP 8.x & MVC
+- **Architecture Custom** : Un framework MVC léger conçu sur mesure pour le projet.
+- **Autoloading** : Gestion propre des classes via Composer (PSR-4).
+- **API REST-like** : Communications fluides entre le frontend (JS) et le backend via des endpoints API dédiés.
+
+---
+
+## 🛠️ Structure du Projet
+
+```text
+project-x/
+├── app/
+│   ├── Controllers/    # Logique (Dashboard, Admin, API)
+│   ├── Core/           # Moteur de l'application (Router)
+│   ├── Models/         # Interactions Base de données
+│   └── Views/          # Templates HTML/PHP
+├── data/               # Base de données SQLite & Logs
+├── includes/           # Composants d'interface (Navbar, Sidebar)
+├── public/             # Fichiers exposés (Index, CSS, JS)
+│   └── assets/         # Ressources statiques
+└── vendor/             # Dépendances Composer
+```
+
+---
+
+## 🌟 Fonctionnalités Clés
+
+- **Gamification** : Système de points par tâche et historique des actions par profil.
+- **Gestion Intelligente** : Tâches récurrentes (Quotidien, Hebdo, Mensuel, Saisonnier).
+- **Multi-Profils** : Sélection rapide de l'utilisateur avec mémorisation par Cookie.
+- **Administration Complète** : Interface dédiée pour gérer les pièces, les tâches et les utilisateurs.
+- **Reset Quotidien** : Système automatique de réinitialisation des tâches chaque matin.
+
+---
+
+## ⚙️ Installation (Laragon)
+
+1. **Cloner le projet** dans votre dossier `www/`.
+2. **Configuration Nginx** : Pointer le `root` vers le dossier `/public`.
+3. **PHP** : Assurez-vous que PHP-CGI écoute sur le port `9003` (ou ajustez la config Nginx).
+4. **Dépendances** :
    ```bash
-   git clone https://github.com/ethan2106/home-harmony.git
-   cd home-harmony
+   composer install
+   npm install
+   ```
+5. **Build CSS** :
+   ```bash
+   npx @tailwindcss/cli -i ./public/assets/css/tailwind.css -o ./public/assets/css/style.css
    ```
 
-2. **Configurez un serveur local** :
-   - Utilisez Laragon, XAMPP ou WAMP.
-   - Placez le dossier dans le répertoire web (ex: `www/` pour Laragon).
-   - Assurez-vous que PHP est activé.
+---
 
-3. **Accédez à l'application** :
-   - Ouvrez votre navigateur à `http://localhost/home-harmony` (ajustez selon votre setup).
-
-4. **Première utilisation** :
-   - Ajoutez des profils via `add_profile.php`.
-   - Créez des pièces via `add_room.php`.
-   - Ajoutez des tâches via `add_task.php`.
-
-## Utilisation
-
-- **Sélectionnez un profil** : Cliquez sur un profil dans le sélecteur pour activer les validations.
-- **Validez une tâche** : Cliquez sur une tâche pour la marquer comme faite (nécessite un profil sélectionné).
-- **Annulez une tâche** : Utilisez la fonction undo si une erreur a été commise.
-- **Filtrez** : Utilisez les boutons de filtre pour afficher seulement certaines catégories.
-- **Admin** : Accédez à `admin.php` pour gérer les données JSON.
-
-## Structure du projet
-
-```
-home-harmony/
-├── index.php              # Page principale
-├── add_profile.php        # Ajout de profils
-├── add_room.php           # Ajout de pièces
-├── add_task.php           # Ajout de tâches
-├── update_task.php        # Mise à jour des tâches (AJAX)
-├── admin.php              # Interface d'administration
-├── assets/
-│   ├── css/style.css      # Styles CSS
-│   └── js/
-│       ├── app.js         # Logique frontend
-│       └── admin.js       # Scripts admin
-├── includes/
-│   ├── bootstrap.php      # Initialisation et logique métier
-│   ├── functions.php      # Fonctions utilitaires
-│   ├── header.php         # En-tête HTML
-│   ├── navbar.php         # Barre de navigation
-│   ├── sidebar.php        # Barre latérale
-│   └── footer.php         # Pied de page
-├── *.json                 # Fichiers de données (tâches, profils, pièces, historique)
-└── README.md              # Ce fichier
-```
-
-## Contribution
-
-Les contributions sont les bienvenues ! Forkez le repo, créez une branche pour vos modifications, et soumettez une pull request.
-
-## Licence
-
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+## 📝 Notes de Développement
+Le projet a été optimisé pour la rapidité et la simplicité de maintenance. L'utilisation de Tailwind v4 permet de se passer de fichiers de configuration JS complexes, tout en offrant une personnalisation totale via le fichier CSS principal.
