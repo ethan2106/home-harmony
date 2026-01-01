@@ -1,63 +1,5 @@
 <?php
-/**
- * Application de Gestion Ménagère - Design "Ultra Modern Glass"
- * Projet : Entretien Maison & Jardin
- * Date : 01 Janvier 2026
- */
-
-// --- 1. LOGIQUE DE RESET JOURNALIER (LAZY CRON) ---
-$lastResetFile = 'last_reset.txt';
-$today = date('Y-m-d');
-$lastReset = file_exists($lastResetFile) ? file_get_contents($lastResetFile) : '';
-
-if ($lastReset !== $today) {
-    $tasksData = file_exists('tasks.json') ? json_decode(file_get_contents('tasks.json'), true) : [];
-    if (is_array($tasksData)) {
-        foreach ($tasksData as &$task) {
-            if (isset($task['date_prevue'])) { $task['date_prevue'] = null; }
-        }
-        file_put_contents('tasks.json', json_encode($tasksData, JSON_PRETTY_PRINT));
-    }
-    file_put_contents($lastResetFile, $today);
-}
-
-// --- 2. CHARGEMENT DES DONNÉES ---
-$profiles = json_decode(file_get_contents("profiles.json"), true) ?? [];
-$tasks = json_decode(file_get_contents("tasks.json"), true) ?? [];
-$rooms = json_decode(file_get_contents("rooms.json"), true) ?? [];
-
-// --- 3. LOGIQUE MÉTIER ---
-function isTaskDue($task) {
-    if (empty($task['dernier_fait'])) return true;
-    $lastDone = new DateTime($task['dernier_fait']);
-    $now = new DateTime(date('Y-m-d'));
-    $diff = $now->diff($lastDone)->days;
-    switch ($task['frequence']) {
-        case 'Quotidien': return $diff >= 1;
-        case 'Hebdomadaire': return $diff >= 7;
-        case 'Mensuel': return $diff >= 30;
-        case 'Saisonnier': return $diff >= 90;
-        default: return true;
-    }
-}
-
-// --- 4. STATISTIQUES ---
-$history = file_exists('history.json') ? json_decode(file_get_contents('history.json'), true) : [];
-$stats = [];
-$currentMonth = date('Y-m');
-foreach ($profiles as $p) { $stats[$p['nom']] = 0; }
-if (is_array($history)) {
-    foreach ($history as $entry) {
-        if (isset($entry['date']) && strpos($entry['date'], $currentMonth) === 0) {
-            if (isset($stats[$entry['profil']])) { $stats[$entry['profil']]++; }
-        }
-    }
-}
-
-// --- 5. TRADUCTION DATE ---
-$jours = ['Monday' => 'Lundi', 'Tuesday' => 'Mardi', 'Wednesday' => 'Mercredi', 'Thursday' => 'Jeudi', 'Friday' => 'Vendredi', 'Saturday' => 'Samedi', 'Sunday' => 'Dimanche'];
-$mois = ['January' => 'Janvier', 'February' => 'Février', 'March' => 'Mars', 'April' => 'Avril', 'May' => 'Mai', 'June' => 'Juin', 'July' => 'Juillet', 'August' => 'Août', 'September' => 'Septembre', 'October' => 'Octobre', 'November' => 'Novembre', 'December' => 'Décembre'];
-$date_fr = $jours[date('l')] . ' ' . date('d') . ' ' . $mois[date('F')];
+require_once 'includes/bootstrap.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -265,12 +207,7 @@ $date_fr = $jours[date('l')] . ' ' . date('d') . ' ' . $mois[date('F')];
 
                 <!-- TODO GRID -->
                 <div id="todo-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <?php 
-                    $todoTasks = array_filter($tasks, function($t) use ($today) {
-                        return ($t['dernier_fait'] ?? '') !== $today && isTaskDue($t);
-                    });
-
-                    if (empty($todoTasks)): ?>
+                    <?php if (empty($todoTasks)): ?>
                         <div class="col-span-full glass-panel py-24 text-center rounded-[4rem] border-dashed border-3 border-indigo-200">
                             <div class="text-7xl mb-8">🥂</div>
                             <h3 class="text-3xl font-black text-slate-800">C'est l'heure de l'apéro !</h3>
@@ -320,7 +257,6 @@ $date_fr = $jours[date('l')] . ' ' . date('d') . ' ' . $mois[date('F')];
                 </div>
 
                 <!-- COMPLETED SECTION -->
-                <?php $doneTasks = array_filter($tasks, function($t) use ($today) { return ($t['dernier_fait'] ?? '') === $today; }); ?>
                 <?php if (!empty($doneTasks)): ?>
                 <section class="mt-24">
                     <div class="flex items-center gap-6 mb-10">

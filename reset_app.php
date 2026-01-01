@@ -1,9 +1,12 @@
 <?php
+require_once 'includes/functions.php';
+
 // reset_app.php
-file_put_contents('tasks.json', json_encode([], JSON_PRETTY_PRINT));
-file_put_contents('rooms.json', json_encode([], JSON_PRETTY_PRINT));
-file_put_contents('profiles.json', json_encode([], JSON_PRETTY_PRINT));
-file_put_contents('history.json', json_encode([], JSON_PRETTY_PRINT));
+saveData('tasks.json', []);
+saveData('rooms.json', []);
+saveData('profiles.json', []);
+saveData('history.json', []);
+
 if (file_exists('last_reset.txt')) {
     unlink('last_reset.txt');
 }

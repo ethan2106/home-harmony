@@ -1,12 +1,13 @@
 <?php
-// add_profile.php
+require_once 'includes/functions.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom'] ?? '';
     $emoji = $_POST['emoji'] ?? '';
     $couleur = $_POST['couleur'] ?? 'indigo-500';
 
     if (!empty($nom)) {
-        $profiles = json_decode(file_get_contents('profiles.json'), true) ?? [];
+        $profiles = loadData('profiles.json');
         
         $newId = 1;
         if (!empty($profiles)) {
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         $profiles[] = $newProfile;
-        file_put_contents('profiles.json', json_encode($profiles, JSON_PRETTY_PRINT));
+        saveData('profiles.json', $profiles);
     }
 }
 

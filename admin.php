@@ -1,7 +1,5 @@
 <?php
-$profiles = json_decode(file_get_contents("profiles.json"), true);
-$tasks = json_decode(file_get_contents("tasks.json"), true) ?? [];
-$rooms = json_decode(file_get_contents("rooms.json"), true) ?? [];
+require_once 'includes/bootstrap.php';
 
 // Suppression d'une tâche
 if (isset($_GET['delete'])) {
@@ -9,7 +7,7 @@ if (isset($_GET['delete'])) {
     $tasks = array_filter($tasks, function($t) use ($idToDelete) {
         return $t['id'] != $idToDelete;
     });
-    file_put_contents('tasks.json', json_encode(array_values($tasks), JSON_PRETTY_PRINT));
+    saveData('tasks.json', $tasks);
     header('Location: admin.php');
     exit;
 }
@@ -20,7 +18,7 @@ if (isset($_GET['delete_room'])) {
     $rooms = array_filter($rooms, function($r) use ($idToDelete) {
         return $r['id'] != $idToDelete;
     });
-    file_put_contents('rooms.json', json_encode(array_values($rooms), JSON_PRETTY_PRINT));
+    saveData('rooms.json', $rooms);
     header('Location: admin.php');
     exit;
 }
@@ -31,7 +29,7 @@ if (isset($_GET['delete_profile'])) {
     $profiles = array_filter($profiles, function($p) use ($idToDelete) {
         return $p['id'] != $idToDelete;
     });
-    file_put_contents('profiles.json', json_encode(array_values($profiles), JSON_PRETTY_PRINT));
+    saveData('profiles.json', $profiles);
     header('Location: admin.php');
     exit;
 }

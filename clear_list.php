@@ -1,5 +1,7 @@
 <?php
-$tasks = json_decode(file_get_contents('tasks.json'), true);
+require_once 'includes/functions.php';
+
+$tasks = loadData('tasks.json');
 $today = date('Y-m-d');
 
 foreach ($tasks as &$task) {
@@ -9,5 +11,5 @@ foreach ($tasks as &$task) {
     }
 }
 
-file_put_contents('tasks.json', json_encode($tasks, JSON_PRETTY_PRINT));
+saveData('tasks.json', $tasks);
 header('Location: index.php');

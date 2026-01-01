@@ -1,6 +1,8 @@
 <?php
+require_once 'includes/functions.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $rooms = json_decode(file_get_contents('rooms.json'), true) ?? [];
+    $rooms = loadData('rooms.json');
     
     $newRoom = [
         'id' => time(),
@@ -10,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     
     $rooms[] = $newRoom;
-    file_put_contents('rooms.json', json_encode($rooms, JSON_PRETTY_PRINT));
+    saveData('rooms.json', $rooms);
     
     header('Location: admin.php');
     exit;

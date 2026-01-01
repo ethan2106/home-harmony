@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/functions.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $taskId = $_POST['id'] ?? null;
     $profil = $_POST['profil'] ?? null;
@@ -9,14 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    $tasks = json_decode(file_get_contents('tasks.json'), true) ?? [];
+    $tasks = loadData('tasks.json');
     
     foreach ($tasks as &$task) {
         if ($task['id'] == $taskId) {
             $today = date('Y-m-d');
-            $historyFile = 'history.json';
-            $history = file_exists($historyFile) ? json_decode(file_get_contents($historyFile), true) : [];
-            if (!is_array($history)) $history = [];
+            $history = loadData('history.json');
 
             // Si déjà fait aujourd'hui, on annule
             if (($task['dernier_fait'] ?? '') === $today) {
@@ -43,12 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'date' => $today
                 ];
             }
-            file_put_contents('history.json', json_encode($history, JSON_PRETTY_PRINT));
+            saveData('history.json', $history);
             break;
         }
     }
     
-    file_put_contents('tasks.json', json_encode($tasks, JSON_PRETTY_PRINT));
+    saveData('tasks.json', $tasks);
     
     header('Content-Type: application/json');
     echo json_encode(['success' => true]);

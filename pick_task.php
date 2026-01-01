@@ -1,9 +1,11 @@
 <?php
+require_once 'includes/functions.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $taskId = $_POST['id'];
     $today = date('Y-m-d');
     
-    $tasks = json_decode(file_get_contents('tasks.json'), true) ?? [];
+    $tasks = loadData('tasks.json');
     
     foreach ($tasks as &$task) {
         if ($task['id'] == $taskId) {
@@ -12,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    file_put_contents('tasks.json', json_encode($tasks, JSON_PRETTY_PRINT));
+    saveData('tasks.json', $tasks);
     
     header('Content-Type: application/json');
     echo json_encode(['success' => true]);

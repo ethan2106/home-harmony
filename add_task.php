@@ -1,6 +1,8 @@
 <?php
+require_once 'includes/functions.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $tasks = json_decode(file_get_contents('tasks.json'), true) ?? [];
+    $tasks = loadData('tasks.json');
     
     $newTask = [
         'id' => time(),
@@ -13,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
     
     $tasks[] = $newTask;
-    file_put_contents('tasks.json', json_encode($tasks, JSON_PRETTY_PRINT));
+    saveData('tasks.json', $tasks);
     
     header('Location: admin.php');
     exit;
