@@ -1,0 +1,32 @@
+# Fichiers sensibles et données utilisateur
+*.json
+last_reset.txt
+
+# Fichiers de test et développement
+beta_test.md
+
+# Logs et fichiers temporaires
+*.log
+*.tmp
+temp/
+logs/
+
+# Cache PHP si utilisé
+cache/
+*.cache
+
+# Environnements locaux
+.env
+.env.local
+
+# Dossiers de dépendances (si ajoutées plus tard)
+vendor/
+node_modules/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Éditeur
+.vscode/
+.idea/
