@@ -4,25 +4,6 @@
  */
 
 /**
- * Charge les données d'un fichier JSON
- */
-function loadData($filename, $default = []) {
-    $path = __DIR__ . '/../' . $filename;
-    if (!file_exists($path)) {
-        return $default;
-    }
-    return json_decode(file_get_contents($path), true) ?? $default;
-}
-
-/**
- * Sauvegarde les données dans un fichier JSON
- */
-function saveData($filename, $data) {
-    $path = __DIR__ . '/../' . $filename;
-    return file_put_contents($path, json_encode(array_values($data), JSON_PRETTY_PRINT));
-}
-
-/**
  * Vérifie si une tâche doit être faite
  */
 function isTaskDue($task) {
