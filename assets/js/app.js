@@ -1,21 +1,33 @@
+/**
+ * Harmony Pro - Logique Frontend
+ * Gère les profils, les validations et les filtres.
+ */
+
 let currentProfile = null;
 
+/**
+ * Sélectionne un profil utilisateur
+ */
 function selectProfile(name, color) {
     currentProfile = { name, color };
-    // Nettoyage des styles de sélection
+    
+    // Nettoyage visuel des boutons
     document.querySelectorAll('.profile-btn').forEach(btn => {
         btn.classList.remove('ring-4', 'ring-offset-2', 'ring-indigo-500', 'scale-105');
     });
-    // Activation visuelle
+    
+    // Activation du bouton sélectionné
     const activeBtn = document.getElementById('btn-' + name);
     if (activeBtn) {
         activeBtn.classList.add('ring-4', 'ring-offset-2', 'ring-indigo-500', 'scale-105');
     }
 }
 
+/**
+ * Valide une tâche (Mode Lux)
+ */
 async function toggleTaskLux(taskId, element) {
     if (!currentProfile) {
-        // Animation d'alerte sur le sélecteur de profil
         const selector = document.getElementById('profile-selector');
         if (selector) {
             selector.classList.add('ring-4', 'ring-red-400', 'animate-shake');
@@ -25,9 +37,7 @@ async function toggleTaskLux(taskId, element) {
         return;
     }
 
-
-
-    // Animation visuelle de validation
+    // Feedback visuel immédiat
     element.classList.add('checked', 'bg-indigo-600');
     const svg = element.querySelector('svg');
     if(svg) svg.classList.remove('hidden');
@@ -35,7 +45,6 @@ async function toggleTaskLux(taskId, element) {
     const card = element.closest('.glass-card');
     if (card) card.classList.add('opacity-50', 'scale-95');
     
-    // On attend la fin de l'animation CSS avant de recharger
     setTimeout(async () => {
         try {
             const response = await fetch('update_task.php', {
@@ -49,11 +58,14 @@ async function toggleTaskLux(taskId, element) {
             }
         } catch (error) {
             console.error("Erreur lors de la mise à jour :", error);
-            element.classList.remove('checked', 'bg-indigo-600'); // Reset en cas d'erreur
+            element.classList.remove('checked', 'bg-indigo-600');
         }
     }, 600);
 }
 
+/**
+ * Annule une tâche terminée et la remet en "À faire"
+ */
 async function undoTask(taskId, element) {
     if (!confirm("Voulez-vous annuler cette tâche et la remettre en 'À faire' ?")) return;
 
@@ -63,7 +75,7 @@ async function undoTask(taskId, element) {
         const response = await fetch('update_task.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${taskId}` // Pas besoin de profil pour annuler
+            body: `id=${taskId}` // L'absence de profil déclenche le 'undo' en PHP
         });
 
         if (response.ok) {
@@ -75,20 +87,20 @@ async function undoTask(taskId, element) {
     }
 }
 
+/**
+ * Filtre les tâches par catégorie (Maison, Jardin, Voiture)
+ */
 function filterTasks(category, btn) {
-
-    // Mise à jour visuelle des boutons de filtre
     document.querySelectorAll('.filter-btn').forEach(b => {
         b.classList.remove('bg-slate-900', 'text-white', 'filter-btn-active');
         b.classList.add('bg-white/50', 'text-slate-600');
     });
     btn.classList.add('bg-slate-900', 'text-white', 'filter-btn-active');
 
-    // Filtrage réel des cartes
     document.querySelectorAll('[data-category]').forEach(card => {
         if (category === 'all' || card.dataset.category === category) {
             card.style.display = 'flex';
-            card.classList.add('animate-fade-in'); // Petite animation si définie en CSS
+            card.classList.add('animate-fade-in');
         } else {
             card.style.display = 'none';
         }

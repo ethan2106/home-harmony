@@ -1,4 +1,8 @@
 <?php
+/**
+ * Engine de mise à jour des tâches
+ * Gère la validation (avec profil) et l'annulation (sans profil).
+ */
 require_once 'includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,47 +16,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     $tasks = loadData('tasks.json');
+    $today = date('Y-m-d');
+    $updated = false;
     
     foreach ($tasks as &$task) {
         if ($task['id'] == $taskId) {
-            $today = date('Y-m-d');
-            $history = loadData('history.json');
+            $history = loadData('history.json') ?? [];
 
-            // Si on ne reçoit pas de profil, on force l'annulation (undo)
-            // OU si la tâche est déjà marquée comme faite aujourd'hui
+            // CAS 1 : ANNULATION (Pas de profil reçu ou déjà fait aujourd'hui)
             if (!$profil || ($task['dernier_fait'] ?? '') === $today) {
                 $task['dernier_fait'] = null;
                 $task['fait_par'] = null;
                 
-                // Retirer de l'historique (la dernière entrée pour cette tâche aujourd'hui)
-                foreach (array_reverse($history, true) as $key => $entry) {
-                    if ($entry['task_id'] == $taskId && $entry['date'] === $today) {
-                        unset($history[$key]);
-                        break;
-                    }
-                }
-                $history = array_values($history);
-            } else {
-                // Sinon on marque comme fait
+                // Nettoyage de l'historique pour éviter les doublons ou scores erronés
+                $history = array_filter($history, function($entry) use ($taskId, $today) {
+                    return !($entry['task_id'] == $taskId && $entry['date'] === $today);
+                });
+                $history = array_values($history); // Réindexer
+            } 
+            // CAS 2 : VALIDATION
+            else {
                 $task['dernier_fait'] = $today;
                 $task['fait_par'] = $profil;
                 
-                // Ajouter à l'historique
                 $history[] = [
                     'task_id' => $taskId,
                     'profil' => $profil,
                     'date' => $today
                 ];
             }
+            
             saveData('history.json', $history);
+            $updated = true;
             break;
         }
     }
 
-    
-    saveData('tasks.json', $tasks);
-    
-    header('Content-Type: application/json');
-    echo json_encode(['success' => true]);
+    if ($updated) {
+        saveData('tasks.json', $tasks);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+    } else {
+        header('Content-Type: application/json', true, 404);
+        echo json_encode(['success' => false, 'error' => 'Tâche non trouvée']);
+    }
     exit;
 }
